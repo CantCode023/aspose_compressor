@@ -1,11 +1,34 @@
 import requests,urllib3,time
 urllib3.disable_warnings()
 
-class AsposeCompressor:
-    def __init__(self, path_to_file: str):
-        """`path_to_file`: Path to the file you want to compress
+class DownloadedFile:
+    def __init__(self, link: str):
+        self.link = link
+
+    def save(self, path: str):
+        """Downloads compressed video
+        `path`: Path to save your video.
         ```py
-        ac = AsposeCompressor("./video.mp4")
+        file = ac.compress_video("./video.mp4")
+        file.save("./output.mp4")
+        ```
+        """
+        binaries = requests.get(self.link).content
+        open(path, "wb").write(binaries)
+
+class AsposeCompressor:
+    def __init__(self):
+        """
+        ```py
+        ac = AsposeCompressor()
+        ```
+        """
+
+    def compress_video(self, path_to_file: str) -> str:
+        """Returns the download link for the compressed file
+        ```py
+        ac = AsposeCompressor()
+        file = ac.compress_video("./video.mp4")
         ```
         """
         self.files = {
@@ -13,14 +36,7 @@ class AsposeCompressor:
             'VideoFormat': (None, 'mp4'),
         }
 
-    def compress_video(self) -> str:
-        """Returns the download link for the compressed file
-        ```py
-        ac = AsposeCompressor("./video.mp4")
-        download_link = ac.compress_video()
-        print(download_link)
-        ```
-        """
+        print("[!] Compressing video")
         response = requests.post('https://api.products.aspose.app/video/compress/api/compress', files=self.files, verify=False)
         file_request_id = response.json()["Data"]["FileRequestId"]
         params = {
@@ -28,6 +44,7 @@ class AsposeCompressor:
         }
         response = None
 
+        print("[!] Fetching download link")
         response = requests.get(
             'https://api.products.aspose.app/video/compress/api/compress/HandleStatus',
             params=params,
@@ -35,11 +52,11 @@ class AsposeCompressor:
         )
 
         while response.json()["Data"]["DownloadLink"] == None:
-            print("[!] Failed! Retrying.")
             response = requests.get(
                 'https://api.products.aspose.app/video/compress/api/compress/HandleStatus',
                 params=params,
                 verify=False,
             )
             time.sleep(5)
-        return response.json()["Data"]["DownloadLink"]
+        print("[!] Compression finished")
+        return DownloadedFile(response.json()["Data"]["DownloadLink"])

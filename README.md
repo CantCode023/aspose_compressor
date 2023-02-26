@@ -1,11 +1,8 @@
 # Aspose Compressor
 ```py
-ac = AsposeCompressor("path/to/file")
-```
-Path to the file you want to compress.
+from aspose_compressor import AsposeCompressor
 
-# compress_video
-```py
-ac.compress_video()
+ac = AsposeCompressor()
+file = ac.compress_video("./aspose-demo.mp4")
+file.save("./output.mp4")
 ```
-Returns download link for the compressed file.

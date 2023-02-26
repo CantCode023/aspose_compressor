@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup_info = {
     "name": "aspose_compressor",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "CantCode023",
     "author_email": "cantcode023@gmail.com",
     "description": "Compress video with 100% compress size and no quality loss with only 3 lines of code.",
