@@ -24,7 +24,7 @@ class AsposeCompressor:
         ```
         """
 
-    def compress_video(self, path_to_file: str) -> str:
+    def compress_video(self, path_to_file: str) -> DownloadedFile:
         """Returns the download link for the compressed file
         ```py
         ac = AsposeCompressor()
